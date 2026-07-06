@@ -1,4 +1,4 @@
---// TOGGLE TARGET BATON
+--// TOGGLE TARGET BATON (MATCH PARCIAL)
 
 _G.TargetBaton = not _G.TargetBaton
 
@@ -18,12 +18,23 @@ local remote = ReplicatedStorage
 getgenv().TargetPlayer = getgenv().TargetPlayer or nil
 
 local function getTargetCharacter()
+
     local name = getgenv().TargetPlayer
     if not name then return nil end
 
-    local player = Players:FindFirstChild(name)
-    if player and player.Character then
-        return player.Character
+    name = string.lower(name)
+
+    for _, player in ipairs(Players:GetPlayers()) do
+
+        local playerName = string.lower(player.Name)
+
+        -- MATCH PARCIAL (ej: "seb" = "sebas")
+        if string.find(playerName, name, 1, true) then
+
+            if player.Character then
+                return player.Character
+            end
+        end
     end
 
     return nil
@@ -46,7 +57,7 @@ local function getArgs(targetCharacter)
             Name = "BoltBaton",
             TargetSound = {"rbxassetid://5507336814"},
             ImpactSound = {"rbxassetid://5507336814"},
-            Force = 200000,
+            Force = 2000000000,
             SpecialBuildup = 14,
             Damage = 0
         },
